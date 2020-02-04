@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { BadRequestExceptionPipe } from './utils/BadRequestExceptionPipe';
 import { AppModule } from './app.module';
+import passport = require('passport');
 
 const { SERVER_PORT, NODE_ENV } = process.env;
 
@@ -22,6 +23,10 @@ async function bootstrap(): Promise<void> {
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup('docs/api', app, document);
   }
+  passport.serializeUser((user, done): void => done(null, user));
+  passport.deserializeUser((user, done): void => done(null, user));
+
+  app.use(passport.initialize());
   app.useGlobalPipes(new BadRequestExceptionPipe());
   await app.listen(SERVER_PORT);
 }

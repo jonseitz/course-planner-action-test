@@ -2,12 +2,15 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import session, { Store } from 'express-session';
 import ConnectRedis from 'connect-redis';
+import { Request, Response, NextFunction } from 'express';
+import { adminUser } from 'testData';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { AuthModule } from './auth/auth.module';
 import { SessionMiddleware } from './auth/session.middleware';
 import { CourseModule } from './course/course.module';
 import { FacultyModule } from './faculty/faculty.module';
+import passport from 'passport';
 
 /**
  * Base application module that injects Mongoose and configures
@@ -54,6 +57,12 @@ class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
     consumer.apply(SessionMiddleware).forRoutes('*');
     if (this.config.isDevelopment) {
+      consumer.apply(
+        (req: Request, res: Response, next: NextFunction): void => {
+          req.login(adminUser, next);
+        }
+      ).forRoutes('*');
+
       // eslint-disable-next-line
       const { devServer, hotServer } = require('./config/dev.middleware');
       consumer.apply(devServer, hotServer).forRoutes('/');

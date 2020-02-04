@@ -19,6 +19,7 @@ class RequireGroup implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     return context.switchToHttp().getRequest()
       .session
+      .passport
       .user
       .groups
       .includes(this.requiredGroup);

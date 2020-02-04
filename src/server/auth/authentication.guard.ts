@@ -13,20 +13,10 @@ import { ConfigService } from '../config/config.service';
 
 @Injectable()
 class Authentication extends AuthGuard('saml') {
-  private readonly isProduction: boolean;
-
-  public constructor(config: ConfigService) {
-    super();
-    this.isProduction = config.isProduction;
-  }
-
   public canActivate(
     context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
-    if (this.isProduction) {
-      return super.canActivate(context);
-    }
-    return true;
+    return super.canActivate(context);
   }
 }
 
