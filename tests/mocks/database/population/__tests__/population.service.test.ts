@@ -22,7 +22,7 @@ import MockDB from '../../MockDB';
 import * as testData from '../data';
 import { nonClassParents, nonClassEvents } from '../data';
 
-describe('Population Service', function () {
+describe.only('Population Service', function () {
   let testModule: TestingModule;
   let db: MockDB;
   let areaRepository: Repository<Area>;
@@ -56,13 +56,16 @@ describe('Population Service', function () {
             imports: [ConfigModule],
             useFactory: (
               config: ConfigService
-            ): TypeOrmModuleOptions => ({
-              ...config.dbOptions,
-              synchronize: true,
-              autoLoadEntities: true,
-              retryAttempts: 10,
-              retryDelay: 10000,
-            }),
+            ): TypeOrmModuleOptions => {
+              console.log(config.dbOptions);
+              return {
+                ...config.dbOptions,
+                synchronize: true,
+                autoLoadEntities: true,
+                retryAttempts: 10,
+                retryDelay: 10000,
+              };
+            },
             inject: [ConfigService],
           }),
           PopulationModule,
@@ -249,9 +252,7 @@ describe('Population Service', function () {
       const parentsRepository: Repository<NonClassParent> = testModule.get(
         getRepositoryToken(NonClassParent)
       );
-      const dbParents = await parentsRepository.find({
-        relations: ['course'],
-      });
+      const dbParents = await parentsRepository.find();
 
       deepStrictEqual(
         dbParents.map(({ contact, title }) => ({ contact, title })),
