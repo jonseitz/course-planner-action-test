@@ -73,7 +73,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish QA image
+      - name: Publish image
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -86,7 +86,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node_version: 14
+          node-version: 14
       - name: Install Dependencies
         run: npm ci
       - name: Import metadata
@@ -99,9 +99,10 @@ jobs:
           SERVER_URL: ${{ secrets.QA_SERVER_URL }}
           APP_NAME: ${{ secrets.QA_APP_NAME }}
         run: |
+          rm -rf build
           npm run build:client
           export QA_BUNDLE_NAME="${{ env.PACKAGE_NAME }}_${{ env.VERSION_TAG }}_QA.tar.gz"
-          tar -czvf $QA_BUNDLE_NAME build/*
+          tar -czvf $QA_BUNDLE_NAME -C build client
           echo QA_BUNDLE_NAME="$QA_BUNDLE_NAME" >> $GITHUB_ENV
       - name: build PROD bundle
         env:
@@ -109,9 +110,10 @@ jobs:
           SERVER_URL: ${{ secrets.PROD_SERVER_URL }}
           APP_NAME: ${{ secrets.PROD_APP_NAME }}
         run: |
+          rm -rf build
           npm run build:client
           export PROD_BUNDLE_NAME="${{ env.PACKAGE_NAME }}_${{ env.VERSION_TAG }}_PROD.tar.gz"
-          tar -czvf $PROD_BUNDLE_NAME build/*
+          tar -czvf $PROD_BUNDLE_NAME -C build client
           echo PROD_BUNDLE_NAME="$PROD_BUNDLE_NAME" >> $GITHUB_ENV
       # Runs a script to create a new release on github, matching the tag set
       # above, and publish the built application as an asset on that release
