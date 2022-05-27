@@ -232,7 +232,7 @@ class ConfigService {
     } = this.env;
     const {
       hostname: domain,
-      pathname: path,
+      pathname,
     } = this.serverURL;
     return {
       session: {
@@ -245,7 +245,7 @@ class ConfigService {
           // 12 hours
           maxAge: 1000 * 60 * 60 * 12,
           domain,
-          path,
+          path: pathname,
           sameSite: 'strict',
           secure: false,
         },
