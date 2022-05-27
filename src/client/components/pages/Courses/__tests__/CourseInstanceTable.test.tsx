@@ -81,6 +81,8 @@ describe('CourseInstanceTable', function () {
             openInstructorModal={openInstructorModalSpy}
             openOfferedModal={openOfferedModalSpy}
             setButtonRef={() => () => {}}
+            openNotesModal={() => {}}
+            isAdmin
           />
         )
         );
@@ -106,22 +108,6 @@ describe('CourseInstanceTable', function () {
           elem.textContent === 'Enrollment'
         ));
         notStrictEqual(enrollment, null);
-      });
-      it('renders the individual enrollment values into the third row', function () {
-        const [, , thirdRow] = getAllByRole('row');
-        const { columnheader } = getRoles(thirdRow);
-        const preHeaders = columnheader.filter((elem) => (
-          elem.textContent === 'Pre'
-        ));
-        const studyHeaders = columnheader.filter((elem) => (
-          elem.textContent === 'Study'
-        ));
-        const actualHeaders = columnheader.filter((elem) => (
-          elem.textContent === 'Actual'
-        ));
-        strictEqual(preHeaders.length, 2, 'Incorrect number of "Pre" columns');
-        strictEqual(studyHeaders.length, 2, 'Incorrect number of "Study" columns');
-        strictEqual(actualHeaders.length, 2, 'Incorrect number of "Actual" columns');
       });
       it('renders the filters in the third row', function () {
         const [, , thirdRow] = getAllByRole('row');
@@ -161,6 +147,8 @@ describe('CourseInstanceTable', function () {
             openInstructorModal={openInstructorModalSpy}
             openOfferedModal={openOfferedModalSpy}
             setButtonRef={() => () => {}}
+            openNotesModal={() => {}}
+            isAdmin
           />
         )
         );
@@ -204,6 +192,8 @@ describe('CourseInstanceTable', function () {
             openInstructorModal={openInstructorModalSpy}
             openOfferedModal={openOfferedModalSpy}
             setButtonRef={() => () => {}}
+            openNotesModal={() => {}}
+            isAdmin
           />
         )
         );
@@ -262,6 +252,8 @@ describe('CourseInstanceTable', function () {
           openInstructorModal={openInstructorModalSpy}
           openOfferedModal={openOfferedModalSpy}
           setButtonRef={() => () => {}}
+          openNotesModal={() => {}}
+          isAdmin
         />
       )
       );
